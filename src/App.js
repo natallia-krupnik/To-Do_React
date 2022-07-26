@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css"
+import TaskInput from "./Components/Tasks/TaskInput/TaskInput";
+import TaskList from "./Components/Tasks/TaskList/TaskList";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+	const App = () => {
+		const [tasks, setTasks] = useState([
+			// { text: "Создание курса - 1 час", id: "t1" },
+			// { text: "Разминка 15 мин", id: "t2" },
+			// { text: "Создание курса - 1 час", id: "t3" },
+			]);
+
+			const addTaskHandler = (inputText) => {
+			setTasks((prevTasks) => {
+				const updatedTasks = [...prevTasks];
+				updatedTasks.unshift({ text: inputText, id: Math.random().toString() });
+				return updatedTasks;
+			});
+			};
+
+			const deleteTaskHandler = (taskId) => {
+			setTasks((prevTasks) => {
+				const updatedTasks = prevTasks.filter((task) => task.id !== taskId);
+				return updatedTasks;
+			});
+			};
+
+			let content = (
+			<p style={{ textAlign: "center" }}>Задач не найдено! Добавить?</p>
+			);
+
+			if (tasks.length > 0) {
+			content = <TaskList items={tasks} onDeleteTask={deleteTaskHandler} />;
+			}
+
+			return (
+			<div>
+				<section id="task-form">
+					<TaskInput onAddTask={addTaskHandler} />
+				</section>
+				<section id="tasks">{content}</section>
+			</div>
+		);
 }
 
 export default App;
